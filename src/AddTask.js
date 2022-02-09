@@ -7,6 +7,7 @@ export default function AddTask({ onAddTask }) {
     description: ''
   });
   const dispatch = useTasksDispatch();
+  let isAddDisabled = task.title === ''
   return (
       <>
         <input
@@ -25,7 +26,9 @@ export default function AddTask({ onAddTask }) {
               description: e.target.value,
             })}
         />
-        <button onClick={() => {
+        <button
+            disabled={isAddDisabled}
+            onClick={() => {
           setTask({
             title: '',
             description: ''

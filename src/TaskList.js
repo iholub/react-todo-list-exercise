@@ -19,6 +19,7 @@ function Task({ task }) {
   const dispatch = useTasksDispatch();
   let taskContent;
   if (isEditing) {
+    let isAddDisabled = task.title === ''
     taskContent = (
         <>
           <input
@@ -43,7 +44,9 @@ function Task({ task }) {
                   }
                 });
               }} />
-          <button onClick={() => setIsEditing(false)}>
+          <button
+              disabled={isAddDisabled}
+              onClick={() => setIsEditing(false)}>
             Save
           </button>
         </>
