@@ -72,6 +72,7 @@ function Task({ task }) {
       <label>
         <input
             type="checkbox"
+            disabled={isEditing}
             checked={task.done}
             onChange={e => {
               dispatch({
