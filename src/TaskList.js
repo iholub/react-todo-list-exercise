@@ -20,36 +20,15 @@ function Task({ task }) {
   const dispatch = useTasksDispatch();
   let taskContent;
   if (isEditing) {
-    let isAddDisabled = task.title === ''
+    let isSaveDisabled = task.title === ''
     taskContent = (
         <>
         <td>
-          <input
-              value={task.title}
-              onChange={e => {
-                dispatch({
-                  type: 'changed',
-                  task: {
-                    ...task,
-                    title: e.target.value
-                  }
-                });
-              }} />
-          <input
-              value={task.description}
-              onChange={e => {
-                dispatch({
-                  type: 'changed',
-                  task: {
-                    ...task,
-                    description: e.target.value
-                  }
-                });
-              }} />
+          <TaskInEditMode task={task}/>
         </td>
         <td>
           <button
-              disabled={isAddDisabled}
+              disabled={isSaveDisabled}
               onClick={() => setIsEditing(false)}>
             Save
           </button>
@@ -57,22 +36,10 @@ function Task({ task }) {
     </>
     );
   } else {
-    let taskText = task.title;
-    if (task.done) {
-      taskText = <s>{taskText}</s>;
-    }
-    if (task.description !== '') {
-      let taskDesc = task.description
-      if (task.done) {
-        taskDesc = <s>{taskDesc}</s>;
-      }
-      taskText = <>{taskText}<CollapsibleDescription description={taskDesc}/></>
-    }
-
     taskContent = (
         <>
         <td>
-          {taskText}
+          <TaskInViewMode task={task}/>
         </td>
         <td>
           <button onClick={() => setIsEditing(true)} disabled={task.done}>
@@ -118,5 +85,55 @@ function CollapsibleDescription({description}) {
       <Collapsible trigger=">>" triggerWhenOpen="<<">
           {description}
       </Collapsible>
+  );
+}
+
+function TaskInEditMode({task}) {
+  const dispatch = useTasksDispatch();
+  return (
+      <>
+        <input
+            placeholder="Title"
+            value={task.title}
+            onChange={e => {
+              dispatch({
+                type: 'changed',
+                task: {
+                  ...task,
+                  title: e.target.value
+                }
+              });
+            }} />
+        <input
+            placeholder="Description"
+            value={task.description}
+            onChange={e => {
+              dispatch({
+                type: 'changed',
+                task: {
+                  ...task,
+                  description: e.target.value
+                }
+              });
+            }} />
+      </>
+  );
+}
+
+function TaskInViewMode({task}) {
+  let taskText = task.title;
+  if (task.done) {
+    taskText = <s>{taskText}</s>;
+  }
+  if (task.description !== '') {
+    let taskDesc = task.description
+    if (task.done) {
+      taskDesc = <s>{taskDesc}</s>;
+    }
+    taskText = <>{taskText}<CollapsibleDescription description={taskDesc}/></>
+  }
+
+  return (
+      <>{taskText}</>
   );
 }
