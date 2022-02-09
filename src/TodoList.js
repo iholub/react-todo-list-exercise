@@ -1,30 +1,30 @@
 import { useState, useContext } from 'react';
-import { useTasks, useTasksDispatch } from './TasksContext.js';
+import { useTodoList, useTodoListDispatch } from './TodoListContext.js';
 import Collapsible from 'react-collapsible';
 
-export default function TaskList() {
-  const tasks = useTasks();
+export default function TodoList() {
+  const todoList = useTodoList();
   return (
       <table>
-        {tasks.map(task => (
-            <tr key={task.id}>
-              <Task task={task} />
+        {todoList.map(todoItem => (
+            <tr key={todoItem.id}>
+              <TodoItem todoItem={todoItem} />
             </tr>
         ))}
       </table>
   );
 }
 
-function Task({ task }) {
+function TodoItem({ todoItem }) {
   const [isEditing, setIsEditing] = useState(false);
-  const dispatch = useTasksDispatch();
-  let taskContent;
+  const dispatch = useTodoListDispatch();
+  let content;
   if (isEditing) {
-    let isSaveDisabled = task.title === ''
-    taskContent = (
+    let isSaveDisabled = todoItem.title === ''
+    content = (
         <>
         <td>
-          <TaskInEditMode task={task}/>
+          <TodoInEditMode todoItem={todoItem}/>
         </td>
         <td>
           <button
@@ -36,19 +36,19 @@ function Task({ task }) {
     </>
     );
   } else {
-    taskContent = (
+    content = (
         <>
         <td>
-          <TaskInViewMode task={task}/>
+          <TodoInViewMode todoItem={todoItem}/>
         </td>
         <td>
-          <button onClick={() => setIsEditing(true)} disabled={task.done}>
+          <button onClick={() => setIsEditing(true)} disabled={todoItem.done}>
             Edit
           </button>
           <button onClick={() => {
             dispatch({
               type: 'deleted',
-              id: task.id
+              id: todoItem.id
             });
           }}>
             Delete
@@ -63,19 +63,19 @@ function Task({ task }) {
         <input
             type="checkbox"
             disabled={isEditing}
-            checked={task.done}
+            checked={todoItem.done}
             onChange={e => {
               dispatch({
                 type: 'changed',
-                task: {
-                  ...task,
+                todoItem: {
+                  ...todoItem,
                   done: e.target.checked
                 }
               });
             }}
         />
         </td>
-        {taskContent}
+        {content}
       </>
   );
 }
@@ -88,30 +88,30 @@ function CollapsibleDescription({description}) {
   );
 }
 
-function TaskInEditMode({task}) {
-  const dispatch = useTasksDispatch();
+function TodoInEditMode({todoItem}) {
+  const dispatch = useTodoListDispatch();
   return (
       <>
         <input
             placeholder="Title"
-            value={task.title}
+            value={todoItem.title}
             onChange={e => {
               dispatch({
                 type: 'changed',
-                task: {
-                  ...task,
+                todoItem: {
+                  ...todoItem,
                   title: e.target.value
                 }
               });
             }} />
         <input
             placeholder="Description"
-            value={task.description}
+            value={todoItem.description}
             onChange={e => {
               dispatch({
                 type: 'changed',
-                task: {
-                  ...task,
+                todoItem: {
+                  ...todoItem,
                   description: e.target.value
                 }
               });
@@ -120,20 +120,20 @@ function TaskInEditMode({task}) {
   );
 }
 
-function TaskInViewMode({task}) {
-  let taskText = task.title;
-  if (task.done) {
-    taskText = <s>{taskText}</s>;
+function TodoInViewMode({todoItem}) {
+  let content = todoItem.title;
+  if (todoItem.done) {
+    content = <s>{content}</s>;
   }
-  if (task.description !== '') {
-    let taskDesc = task.description
-    if (task.done) {
-      taskDesc = <s>{taskDesc}</s>;
+  if (todoItem.description !== '') {
+    let descriptionContent = todoItem.description
+    if (todoItem.done) {
+      descriptionContent = <s>{descriptionContent}</s>;
     }
-    taskText = <>{taskText}<CollapsibleDescription description={taskDesc}/></>
+    content = <>{content}<CollapsibleDescription description={descriptionContent}/></>
   }
 
   return (
-      <>{taskText}</>
+      <>{content}</>
   );
 }

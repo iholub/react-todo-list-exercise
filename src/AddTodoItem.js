@@ -1,43 +1,43 @@
 import { useState, useContext } from 'react';
-import { useTasksDispatch } from './TasksContext.js';
+import { useTodoListDispatch } from './TodoListContext.js';
 
-export default function AddTask({ onAddTask }) {
-  const [task, setTask] = useState({
+export default function AddTodoItem() {
+  const [todoItem, setTodoItem] = useState({
     title: '',
     description: ''
   });
-  const dispatch = useTasksDispatch();
-  let isAddDisabled = task.title === ''
+  const dispatch = useTodoListDispatch();
+  let isAddDisabled = todoItem.title === ''
   return (
       <>
         <input
             placeholder="Add title"
-            value={task.title}
-            onChange={e => setTask({
-              ...task,
+            value={todoItem.title}
+            onChange={e => setTodoItem({
+              ...todoItem,
               title: e.target.value
             })}
         />
         <input
             placeholder="Add description"
-            value={task.description}
-            onChange={e => setTask({
-              ...task,
+            value={todoItem.description}
+            onChange={e => setTodoItem({
+              ...todoItem,
               description: e.target.value,
             })}
         />
         <button
             disabled={isAddDisabled}
             onClick={() => {
-          setTask({
+          setTodoItem({
             title: '',
             description: ''
           });
           dispatch({
             type: 'added',
             id: nextId++,
-            title: task.title,
-            description: task.description,
+            title: todoItem.title,
+            description: todoItem.description,
           });
         }}>Add</button>
       </>

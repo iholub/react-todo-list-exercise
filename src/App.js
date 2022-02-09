@@ -1,13 +1,13 @@
-import AddTask from './AddTask.js';
-import TaskList from './TaskList.js';
-import { TasksProvider } from './TasksContext.js';
+import AddTodoItem from './AddTodoItem.js';
+import TodoList from './TodoList.js';
+import { TodoListProvider } from './TodoListContext.js';
 
-export default function TaskApp() {
+export default function TodoApp() {
   return (
-      <TasksProvider>
+      <TodoListProvider>
         <h1>Todo List</h1>
-        <AddTask />
-        <TaskList />
-      </TasksProvider>
+        <AddTodoItem />
+        <TodoList />
+      </TodoListProvider>
   );
 }
