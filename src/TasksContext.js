@@ -30,11 +30,13 @@ export function useTasksDispatch() {
 function tasksReducer(tasks, action) {
   switch (action.type) {
     case 'added': {
-      return [...tasks, {
+      return [{
         id: action.id,
-        text: action.text,
+        title: action.title,
+        description: action.description,
         done: false
-      }];
+      },
+        ...tasks];
     }
     case 'changed': {
       return tasks.map(t => {
@@ -55,7 +57,7 @@ function tasksReducer(tasks, action) {
 }
 
 const initialTasks = [
-  { id: 0, text: 'Clean Beskar', done: true },
-  { id: 1, text: 'Kill Sarlacc', done: false },
-  { id: 2, text: 'Feed Foundling', done: false }
+  { id: 0, title: 'Clean Beskar', description: '', done: true },
+  { id: 1, title: 'Kill Sarlacc', description: 'be careful', done: false },
+  { id: 2, title: 'Feed Foundling', description: '', done: false }
 ];

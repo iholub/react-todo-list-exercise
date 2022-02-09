@@ -22,13 +22,24 @@ function Task({ task }) {
     taskContent = (
         <>
           <input
-              value={task.text}
+              value={task.title}
               onChange={e => {
                 dispatch({
                   type: 'changed',
                   task: {
                     ...task,
-                    text: e.target.value
+                    title: e.target.value
+                  }
+                });
+              }} />
+          <input
+              value={task.description}
+              onChange={e => {
+                dispatch({
+                  type: 'changed',
+                  task: {
+                    ...task,
+                    description: e.target.value
                   }
                 });
               }} />
@@ -38,7 +49,10 @@ function Task({ task }) {
         </>
     );
   } else {
-    let taskText = task.text;
+    let taskText = task.title;
+    if (task.description !== '') {
+      taskText = taskText + " (" + task.description + ")";
+    }
     if (task.done) {
       taskText = <s>{taskText}</s>;
     }
@@ -56,7 +70,6 @@ function Task({ task }) {
         <input
             type="checkbox"
             checked={task.done}
-            disabled={task.done}
             onChange={e => {
               dispatch({
                 type: 'changed',
