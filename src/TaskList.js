@@ -1,16 +1,17 @@
 import { useState, useContext } from 'react';
 import { useTasks, useTasksDispatch } from './TasksContext.js';
+import Collapsible from 'react-collapsible';
 
 export default function TaskList() {
   const tasks = useTasks();
   return (
-      <ul>
+      <table>
         {tasks.map(task => (
-            <li key={task.id}>
+            <tr key={task.id}>
               <Task task={task} />
-            </li>
+            </tr>
         ))}
-      </ul>
+      </table>
   );
 }
 
@@ -22,6 +23,7 @@ function Task({ task }) {
     let isAddDisabled = task.title === ''
     taskContent = (
         <>
+        <td>
           <input
               value={task.title}
               onChange={e => {
@@ -44,32 +46,53 @@ function Task({ task }) {
                   }
                 });
               }} />
+        </td>
+        <td>
           <button
               disabled={isAddDisabled}
               onClick={() => setIsEditing(false)}>
             Save
           </button>
-        </>
+        </td>
+    </>
     );
   } else {
     let taskText = task.title;
-    if (task.description !== '') {
-      taskText = taskText + " (" + task.description + ")";
-    }
     if (task.done) {
       taskText = <s>{taskText}</s>;
     }
+    if (task.description !== '') {
+      let taskDesc = task.description
+      if (task.done) {
+        taskDesc = <s>{taskDesc}</s>;
+      }
+      taskText = <>{taskText}<CollapsibleDescription description={taskDesc}/></>
+    }
+
     taskContent = (
         <>
+        <td>
           {taskText}
+        </td>
+        <td>
           <button onClick={() => setIsEditing(true)} disabled={task.done}>
             Edit
           </button>
+          <button onClick={() => {
+            dispatch({
+              type: 'deleted',
+              id: task.id
+            });
+          }}>
+            Delete
+          </button>
+        </td>
         </>
     );
   }
   return (
-      <label>
+      <>
+        <td>
         <input
             type="checkbox"
             disabled={isEditing}
@@ -84,15 +107,16 @@ function Task({ task }) {
               });
             }}
         />
+        </td>
         {taskContent}
-        <button onClick={() => {
-          dispatch({
-            type: 'deleted',
-            id: task.id
-          });
-        }}>
-          Delete
-        </button>
-      </label>
+      </>
+  );
+}
+
+function CollapsibleDescription({description}) {
+  return (
+      <Collapsible trigger=">>" triggerWhenOpen="<<">
+          {description}
+      </Collapsible>
   );
 }
