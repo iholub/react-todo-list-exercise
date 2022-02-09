@@ -38,10 +38,14 @@ function Task({ task }) {
         </>
     );
   } else {
+    let taskText = task.text;
+    if (task.done) {
+      taskText = <s>{taskText}</s>;
+    }
     taskContent = (
         <>
-          {task.text}
-          <button onClick={() => setIsEditing(true)}>
+          {taskText}
+          <button onClick={() => setIsEditing(true)} disabled={task.done}>
             Edit
           </button>
         </>
@@ -52,6 +56,7 @@ function Task({ task }) {
         <input
             type="checkbox"
             checked={task.done}
+            disabled={task.done}
             onChange={e => {
               dispatch({
                 type: 'changed',
